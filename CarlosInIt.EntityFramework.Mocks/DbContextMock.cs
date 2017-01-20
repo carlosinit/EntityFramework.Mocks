@@ -1,63 +1,104 @@
-﻿using Moq;
+﻿using Castle.DynamicProxy;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace CarlosInIt.EntityFramework.Mocks
 {
-    /// <summary>
-    /// Implementation follows https://msdn.microsoft.com/en-us/library/dn314431(v=vs.113).aspx
-    /// </summary>
-    public class DbContextMock<TDbContext> : Mock<TDbContext>
-        where TDbContext : DbContext
+    public class DbContextMock<TDbContext> : IInterceptor
+        where TDbContext : DbContext, new()
     {
-        #region Public Methods
+        #region Public Properties
 
-        public DbContextMock<TDbContext> VerifySaveChangesAsyncCalled(int numberOfTimes = 1)
+        public TDbContext Object { get; private set; }
+        public int SaveChangesAsyncCalls { get; private set; }
+        public int SaveChangesCalls { get; private set; }
+
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public DbContextMock(params object[] constructorParameters)
         {
-            Verify(c => c.SaveChangesAsync(), Times.Exactly(numberOfTimes));
-            return this;
+            var generator = new ProxyGenerator();
+            var options = new ProxyGenerationOptions();
+            Object = (TDbContext)generator.CreateClassProxy(
+                typeof(TDbContext),
+                constructorParameters,
+                this);
         }
 
-        public DbContextMock<TDbContext> VerifySaveChangesCalled(int numberOfTimes = 1)
+        #endregion Public Constructors
+
+        #region Private Fields
+
+        private int saveChangesResult;
+
+        #endregion Private Fields
+
+        #region Public Methods
+
+        public void Intercept(IInvocation invocation)
         {
-            Verify(c => c.SaveChanges(), Times.Exactly(numberOfTimes));
-            return this;
+            switch (invocation.Method.Name)
+            {
+                case nameof(DbContext.SaveChanges):
+                    SaveChangesCalls++;
+                    invocation.ReturnValue = saveChangesResult;
+                    break;
+
+                case nameof(DbContext.SaveChangesAsync):
+                    SaveChangesAsyncCalls++;
+                    invocation.ReturnValue = Task.FromResult(saveChangesResult);
+                    break;
+
+                default:
+                    invocation.Proceed();
+                    break;
+            }
         }
 
         public DbContextMock<TDbContext> WithCallToSaveChanges(int returnValue = 0)
         {
-            Setup(c => c.SaveChanges()).Returns(returnValue);
+            saveChangesResult = returnValue;
             return this;
         }
 
         public DbContextMock<TDbContext> WithCallToSaveChangesAsync(int returnValue = 0)
         {
-            Setup(c => c.SaveChangesAsync()).ReturnsAsync(returnValue);
+            saveChangesResult = returnValue;
             return this;
         }
 
         public DbContextMock<TDbContext> WithDbSet<TEntity>(
             Expression<Func<TDbContext, DbSet<TEntity>>> dbSetExpression,
-            IEnumerable<TEntity> entities) where TEntity : class
-        {
-            var fakeDbSet = new FakeDbSet<TEntity>(new ObservableCollection<TEntity>(entities));
-            Setup(dbSetExpression).Returns(fakeDbSet);
-            return this;
-        }
-
-        public DbContextMock<TDbContext> WithDbSet<TEntity>(
-            Expression<Func<TDbContext, DbSet<TEntity>>> dbSetExpression,
-            TEntity entity = null)
+            IEnumerable<TEntity> entities,
+            Func<TEntity, object[], bool> findPredicate = null)
             where TEntity : class
         {
-            if (entity != null) return WithDbSet(dbSetExpression, new[] { entity });
+            var fakeDbSet = new FakeDbSet<TDbContext, TEntity>(
+                Object,
+                new ObservableCollection<TEntity>(entities),
+                findPredicate);
 
-            var fakeDbSet = new FakeDbSet<TEntity>();
-            Setup(dbSetExpression).Returns(fakeDbSet);
+            var propertyName = (dbSetExpression.Body as MemberExpression).Member.Name;
+            typeof(TDbContext).GetProperty(propertyName).SetValue(Object, fakeDbSet);
+
             return this;
+        }
+
+        public DbContextMock<TDbContext> WithDbSet<TEntity>(
+            Expression<Func<TDbContext, DbSet<TEntity>>> dbSetExpression,
+            TEntity entity = null,
+            Func<TEntity, object[], bool> findPredicate = null)
+            where TEntity : class
+        {
+            var entities = new List<TEntity>();
+            if (entity != null) entities.Add(entity);
+            return WithDbSet(dbSetExpression, entities, findPredicate);
         }
 
         #endregion Public Methods

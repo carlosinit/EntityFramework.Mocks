@@ -5,16 +5,24 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace CarlosInIt.EntityFramework.Mocks
 {
-    internal class FakeDbSet<TEntity> : DbSet<TEntity>, IQueryable, IEnumerable<TEntity>, IDbAsyncEnumerable<TEntity>
+    internal class FakeDbSet<TDbContext, TEntity> :
+        DbSet<TEntity>,
+        IQueryable,
+        IEnumerable<TEntity>,
+        IDbAsyncEnumerable<TEntity>
         where TEntity : class
+        where TDbContext : DbContext
     {
         #region Private Fields
 
-        private readonly ObservableCollection<TEntity> _data;
-        private readonly IQueryable _query;
+        private readonly ObservableCollection<TEntity> data;
+        private readonly IQueryable queryable;
+        private TDbContext context;
+        private Func<TEntity, object[], bool> findPredicate;
 
         #endregion Private Fields
 
@@ -22,37 +30,37 @@ namespace CarlosInIt.EntityFramework.Mocks
 
         Type IQueryable.ElementType
         {
-            get { return _query.ElementType; }
+            get { return queryable.ElementType; }
         }
 
         Expression IQueryable.Expression
         {
-            get { return _query.Expression; }
+            get { return queryable.Expression; }
         }
 
         public override ObservableCollection<TEntity> Local
         {
-            get { return _data; }
+            get { return data; }
         }
 
         IQueryProvider IQueryable.Provider
         {
-            get { return new FakeDbAsyncQueryProvider<TEntity>(_query.Provider); }
+            get { return new FakeDbAsyncQueryProvider<TEntity>(queryable.Provider); }
         }
 
         #endregion Public Properties
 
         #region Public Constructors
 
-        public FakeDbSet()
-            :this(new ObservableCollection<TEntity>())
+        public FakeDbSet(
+            TDbContext context,
+            ObservableCollection<TEntity> data,
+            Func<TEntity, object[], bool> findPredicate = null)
         {
-        }
-
-        public FakeDbSet(ObservableCollection<TEntity> memoryCollection)
-        {
-            _data = memoryCollection;
-            _query = _data.AsQueryable();
+            this.findPredicate = findPredicate;
+            this.context = context;
+            this.data = data;
+            queryable = this.data.AsQueryable();
         }
 
         #endregion Public Constructors
@@ -61,13 +69,13 @@ namespace CarlosInIt.EntityFramework.Mocks
 
         public override TEntity Add(TEntity entity)
         {
-            _data.Add(entity);
+            data.Add(entity);
             return entity;
         }
 
         public override TEntity Attach(TEntity entity)
         {
-            _data.Add(entity);
+            data.Add(entity);
             return entity;
         }
 
@@ -81,24 +89,37 @@ namespace CarlosInIt.EntityFramework.Mocks
             return Activator.CreateInstance<TDerivedEntity>();
         }
 
+        public override TEntity Find(params object[] keyValues)
+        {
+            if (findPredicate == null) throw new NotSupportedException(
+                "Find or FindAsync cannot be called if the find predicate is not provided");
+
+            return data.SingleOrDefault(d => findPredicate(d, keyValues));
+        }
+
+        public override Task<TEntity> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
         IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
         {
-            return new FakeDbAsyncEnumerator<TEntity>(_data.GetEnumerator());
+            return new FakeDbAsyncEnumerator<TEntity>(data.GetEnumerator());
         }
 
         IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return data.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return data.GetEnumerator();
         }
 
         public override TEntity Remove(TEntity entity)
         {
-            _data.Remove(entity);
+            data.Remove(entity);
             return entity;
         }
 

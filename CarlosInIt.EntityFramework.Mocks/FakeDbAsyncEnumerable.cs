@@ -5,7 +5,10 @@ using System.Linq.Expressions;
 
 namespace CarlosInIt.EntityFramework.Mocks
 {
-    internal class FakeDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable<T>, IQueryable<T>
+    internal class FakeDbAsyncEnumerable<T> :
+        EnumerableQuery<T>,
+        IDbAsyncEnumerable<T>,
+        IQueryable<T>
     {
         #region Public Properties
 

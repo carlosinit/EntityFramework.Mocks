@@ -85,9 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextMockTests.cs" />
+    <Compile Include="FakeDbSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDbContext.cs" />
-    <Compile Include="TestEntity.cs" />
+    <Compile Include="Stubs\TestDerivedEntity.cs" />
+    <Compile Include="Stubs\TestDbContext.cs" />
+    <Compile Include="Stubs\TestEntity.cs" />
+    <Compile Include="Stubs\TestSubEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

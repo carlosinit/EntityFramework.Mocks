@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Moq;
-using System;
+﻿using CarlosInIt.EntityFramework.Mocks.Stubs.Tests;
+using CarlosInIt.EntityFramework.Mocks.Tests.Stubs;
+using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,58 +9,56 @@ namespace CarlosInIt.EntityFramework.Mocks.Tests
 {
     public class DbContextMockTests
     {
+        #region Public Methods
+
         [Fact]
-        public async Task VerifySaveChangesAsyncCalled_CalledOnce_NoException()
+        public async Task SaveChangesAsyncCalls_CalledOnce_SaveChangesAsyncCallsIsOne()
         {
             // Arrange
             var contextMock = new DbContextMock<TestDbContext>();
 
             // Act
             await contextMock.Object.SaveChangesAsync();
-            Action action = () => contextMock.VerifySaveChangesAsyncCalled();
 
             // Assert
-            action.ShouldNotThrow();
+            contextMock.SaveChangesAsyncCalls.Should().Be(1);
         }
 
         [Fact]
-        public void VerifySaveChangesAsyncCalled_NeverCalled_MockExceptionThrown()
+        public void SaveChangesAsyncCalls_NeverCalled_SaveChangesAsyncCallsIsZero()
         {
             // Arrange
             var contextMock = new DbContextMock<TestDbContext>();
 
             // Act
-            Action action = () => contextMock.VerifySaveChangesAsyncCalled();
 
             // Assert
-            action.ShouldThrow<MockException>().And.Message.Contains("No invocations performed");
+            contextMock.SaveChangesAsyncCalls.Should().Be(0);
         }
 
         [Fact]
-        public void VerifySaveChangesCalled_CalledOnce_NoException()
+        public void SaveChangesCalls_CalledOnce_SaveChangesCallsIsOne()
         {
             // Arrange
             var contextMock = new DbContextMock<TestDbContext>();
 
             // Act
             contextMock.Object.SaveChanges();
-            Action action = () => contextMock.VerifySaveChangesCalled();
 
             // Assert
-            action.ShouldNotThrow();
+            contextMock.SaveChangesCalls.Should().Be(1);
         }
 
         [Fact]
-        public void VerifySaveChangesCalled_NeverCalled_MockExceptionThrown()
+        public void SaveChangesCalls_NeverCalled_MockExceptionThrown()
         {
             // Arrange
             var contextMock = new DbContextMock<TestDbContext>();
 
             // Act
-            Action action = () => contextMock.VerifySaveChangesCalled();
 
             // Assert
-            action.ShouldThrow<MockException>().And.Message.Contains("No invocations performed");
+            contextMock.SaveChangesCalls.Should().Be(0);
         }
 
         [Fact]
@@ -129,17 +127,17 @@ namespace CarlosInIt.EntityFramework.Mocks.Tests
             // Arrange
             var entities = new[]
             {
-                new TestEntity {City = "C1", Name = "N1" },
-                new TestEntity {City = "C2", Name = "N2" }
+                new TestEntity(),
+                new TestEntity()
             };
             // Act
             var contextMock = new DbContextMock<TestDbContext>();
             contextMock.WithDbSet(c => c.Entities, entities);
 
             // Assert
-            contextMock.Object.Entities.Should().NotBeNull();
-            contextMock.Object.Entities.Should().BeOfType<FakeDbSet<TestEntity>>();
+            contextMock.Object.Entities.Should().BeOfType<FakeDbSet<TestDbContext, TestEntity>>();
             contextMock.Object.Entities.Should().Equal(entities);
+            contextMock.Object.Entities.Should().NotBeNull();
         }
 
         [Fact]
@@ -152,8 +150,10 @@ namespace CarlosInIt.EntityFramework.Mocks.Tests
 
             // Assert
             contextMock.Object.Entities.Should().NotBeNull();
-            contextMock.Object.Entities.Should().BeOfType<FakeDbSet<TestEntity>>();
+            contextMock.Object.Entities.Should().BeOfType<FakeDbSet<TestDbContext, TestEntity>>();
             contextMock.Object.Entities.ToList().Count.Should().Be(0);
         }
+
+        #endregion Public Methods
     }
 }

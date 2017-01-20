@@ -21,8 +21,6 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("d605fe81-a979-43ad-a17c-e6b17e46b95e")]
-
-[assembly:InternalsVisibleTo("CarlosInIt.EntityFramework.Mocks.Tests")]
-
+[assembly: InternalsVisibleTo("CarlosInIt.EntityFramework.Mocks.Tests")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
