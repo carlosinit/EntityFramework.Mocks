@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarlosInIt.EntityFramework.Mocks", "CarlosInIt.EntityFramework.Mocks.csproj", "{D605FE81-A979-43AD-A17C-E6B17E46B95E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarlosInIt.EntityFramework.Mocks.Tests", "..\CarlosInIt.EntityFramework.Mocks.Tests\CarlosInIt.EntityFramework.Mocks.Tests.csproj", "{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D605FE81-A979-43AD-A17C-E6B17E46B95E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D605FE81-A979-43AD-A17C-E6B17E46B95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D605FE81-A979-43AD-A17C-E6B17E46B95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D605FE81-A979-43AD-A17C-E6B17E46B95E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
