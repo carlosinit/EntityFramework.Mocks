@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarlosInIt.EntityFramework.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarlosInIt.EntityFramework.Mocks.Tests", "..\CarlosInIt.EntityFramework.Mocks.Tests\CarlosInIt.EntityFramework.Mocks.Tests.csproj", "{DDD1BBE3-6F2E-4AA2-827F-68EA6AA16D87}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4188D7E0-AFF0-46D9-95A6-4D2A11974903}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
