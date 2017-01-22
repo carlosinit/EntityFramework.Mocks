@@ -22,6 +22,7 @@ This project proposes an implementation of a mock of DbContext. That mock propos
 What is not supported at the moment:
 * Entity state tracking
 * Include method (for now calling it makes no difference)
+* Identity column support
 
 ## Example
 ``` cs
@@ -46,6 +47,7 @@ contextMock.Object.Entities.Should().NotBeNull();
 Some of the features to come:
 * Implement the Include functionality (if Include called sub entity is provided otherwise null)
 * Entity state tracking
+* Identity column support
 
 ## Remarks
 * The implementation of this mock is based on the following Microsoft documentation:
