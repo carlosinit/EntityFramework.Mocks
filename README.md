@@ -84,7 +84,7 @@ public void SaveCarTest()
     // Assert
     Assert.Equal(updatedCar.Brand, expectedCar.Brand);
     Assert.Equal(updatedCar.Model, expectedCar.Model);
-    dbContextMock.SaveChangesCalls.Should().Be(1);
+    Assert.Equal(1, dbContextMock.SaveChangesCalls);
 }
 ```
 
