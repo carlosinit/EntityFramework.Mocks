@@ -1,10 +1,12 @@
 # CarlosInIt.EntityFramework.Mocks
 ---
 ## Introduction
-This project was built in order to help developers to unit test code that depends on Entity Framework without the need for any database being it in-memory or traditional.
+This project was built in order to help developers to unit test code that depends on Entity Framework without the need for any database being it in-memory or "real".
+
+> **Personal story**: Since there was already 3 occasions I implemented this bunch of classes in different projects in order to test my data access, I decided to create a nuget that I could reuse in all of those and in the next to come.
 
 ## Nuget package
-https://www.nuget.org/packages/CarlosInIt.EntityFramework.Mocks/1.0.0
+https://www.nuget.org/packages/CarlosInIt.EntityFramework.Mocks
 ``` 
 Install-Package CarlosInIt.EntityFramework.Mocks
 ```
@@ -18,7 +20,8 @@ This project proposes an implementation of a mock of DbContext. That mock propos
 * Support for Find anf FindAsync method when a find predicate is provided
 
 What is not supported at the moment:
-* Entity tracking
+* Entity state tracking
+* Include method (for now calling it makes no difference)
 
 ## Example
 ``` cs
@@ -40,9 +43,9 @@ contextMock.Object.Entities.Should().NotBeNull();
 **Notice the real DbContext type needs to be passed as a generic type of the mock** 
 
 ## What's next?
-In the near future, a more exhaustive how-to documentation will be added on this page.
-
-Otherwise, right now it does what I need from it. But if you have a great idea, well I am open for suggestions and pull requests!
+Some of the features to come:
+* Implement the Include functionality (if Include called sub entity is provided otherwise null)
+* Entity state tracking
 
 ## Remarks
 * The implementation of this mock is based on the following Microsoft documentation:
