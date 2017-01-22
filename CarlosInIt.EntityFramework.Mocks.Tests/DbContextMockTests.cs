@@ -143,8 +143,7 @@ namespace CarlosInIt.EntityFramework.Mocks.Tests
         [Fact]
         public void WithDbSetTest_WithoutEntities_NoEntitiesFound()
         {
-            // Arrange
-            // Act
+            // Arrange Act
             var contextMock = new DbContextMock<TestDbContext>();
             contextMock.WithDbSet(c => c.Entities);
 
