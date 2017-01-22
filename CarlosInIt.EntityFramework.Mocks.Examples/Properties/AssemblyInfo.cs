@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following set of attributes.
 // Change these attribute values to modify the information associated with an assembly.
 [assembly: AssemblyTitle("CarlosInIt.EntityFramework.Mocks.Examples")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Contains examples on how to use the mocks")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("CarlosInIt")]
 [assembly: AssemblyProduct("CarlosInIt.EntityFramework.Mocks.Examples")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
+[assembly: AssemblyCopyright("Copyright © CarlosInIt 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
