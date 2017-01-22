@@ -23,6 +23,7 @@ What is not supported at the moment:
 * Entity state tracking
 * Include method (for now calling it makes no difference)
 * Identity column support
+* Advanced scenarios like logical delete
 
 ## Example
 ``` cs
@@ -44,10 +45,7 @@ contextMock.Object.Entities.Should().NotBeNull();
 **Notice the real DbContext type needs to be passed as a generic type of the mock** 
 
 ## What's next?
-Some of the features to come:
-* Implement the Include functionality (if Include called sub entity is provided otherwise null)
-* Entity state tracking
-* Identity column support
+All the unsupported features described above
 
 ## Remarks
 * The implementation of this mock is based on the following Microsoft documentation:
