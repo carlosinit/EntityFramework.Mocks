@@ -24,25 +24,74 @@ What is not supported at the moment:
 * Include method (for now calling it makes no difference)
 * Identity column support
 * Advanced scenarios like logical delete
+* Simulate database exceptions
 
-## Example
+## Quick start
+You can create a DbContext mock by instantiation the Generic DbContextMock class while passing your real DbContext Type as the generic parameter
 ``` cs
-// Arrange
-var entities = new[]
-{
-    new TestEntity(),
-    new TestEntity()
-};
-// Act
-var contextMock = new DbContextMock<TestDbContext>();
-contextMock.WithDbSet(c => c.Entities, entities);
-
-// Assert
-contextMock.Object.Entities.Should().BeOfType<FakeDbSet<TestDbContext, TestEntity>>();
-contextMock.Object.Entities.Should().Equal(entities);
-contextMock.Object.Entities.Should().NotBeNull();
+var dbContextMock = new DbContextMock<FleetContext>();
 ```
-**Notice the real DbContext type needs to be passed as a generic type of the mock** 
+Then you will need to tell which DbSet you will use
+``` cs
+dbContextMock.WithDbSet(c => c.Cars);
+```
+If you need the DbSet to be preloaded with data you can use this overload instead
+``` cs
+dbContextMock.WithDbSet(c => c.Cars, new[] { ... });
+```
+If you need the DbSet to be able to perform a Find or FindAsync you need to specify how the id is resolved
+``` cs
+dbContextMock.WithDbSet(c => c.Cars, new[] { ... }, (entity, keys)=>entity.Id == (int)keys[0]);
+```
+Now you can use the configured DbContext mock
+``` cs
+var carService = new CarService(dbContextMock.Object);
+// Use the service now...
+```
+If you need to check if SaveChanges or SaveChangesAsync was called (which you do if you are saving data to the database)
+``` cs
+Assert.AreEqual(1, dbContextMock.SaveChangesCalls);
+// or in case of async
+Assert.AreEqual(1, dbContextMock.SaveChangesAsyncCalls);
+```
+You can also specify what SaveChanges and SaveChangesAsync should return
+``` cs
+dbContextMock.WithCallToSaveChanges(numberYouWantToBeReturned);
+// or in case of async
+dbContextMock.WithCallToSaveChangesAsync(numberYouWantToBeReturned);
+```
+Here goes a full example of an update example
+``` cs
+public void SaveCarTest()
+{
+    // Arrange
+    var existingCars = new[]
+    {
+        new Car { Id = 7, Brand = "VW", Model = "Polo", PlateNumber="AZERTY7" },
+        new Car { Id = 8, Brand = "VW", Model = "Golf", PlateNumber="AZERTY8" },
+        new Car { Id = 9, Brand = "VW", Model = "Passat", PlateNumber="AZERTY9" },
+        new Car { Id = 10, Brand = "VW", Model = "Jetta", PlateNumber="AZERTY10" }
+    };
+    var dbContextMock = new DbContextMock<FleetContext>();
+    dbContextMock.WithDbSet(c => c.Cars, existingCars, (car, keys) => car.Id == (int)keys[0]);
+    var expectedCar = existingCars[new Random().Next(0, existingCars.Length - 1)];
+    var updatedCar = new Car { Id = expectedCar.Id, Brand = "Skoda", Model = "Superb" };
+    dbContextMock.WithCallToSaveChanges(1);
+
+    // Act
+    sut.SaveCar(expectedCar.Id, updatedCar);
+
+    // Assert
+    expectedCar.Brand.Should().Be(updatedCar.Brand);
+    expectedCar.Model.Should().Be(updatedCar.Model);
+    dbContextMock.SaveChangesCalls.Should().Be(1);
+}
+```
+
+
+## Examples
+An example of service depending on DbContext being tested can be found in this repository here:
+https://github.com/carlosinit/EntityFramework.Mocks/tree/master/CarlosInIt.EntityFramework.Mocks.Examples
 
 ## What's next?
 All the unsupported features described above
