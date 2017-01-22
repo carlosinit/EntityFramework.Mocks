@@ -1,4 +1,4 @@
-# CarlosInIt.EntityFramework.Mocks
+# EntityFramework Mocks
 ---
 ## Introduction
 This project was built in order to help developers to unit test code that depends on Entity Framework without the need for any database being it in-memory or "real".
@@ -50,9 +50,9 @@ var carService = new CarService(dbContextMock.Object);
 ```
 If you need to check if SaveChanges or SaveChangesAsync was called (which you do if you are saving data to the database)
 ``` cs
-Assert.AreEqual(1, dbContextMock.SaveChangesCalls);
+Assert.Equal(1, dbContextMock.SaveChangesCalls);
 // or in case of async
-Assert.AreEqual(1, dbContextMock.SaveChangesAsyncCalls);
+Assert.Equal(1, dbContextMock.SaveChangesAsyncCalls);
 ```
 You can also specify what SaveChanges and SaveChangesAsync should return
 ``` cs
@@ -82,8 +82,8 @@ public void SaveCarTest()
     sut.SaveCar(expectedCar.Id, updatedCar);
 
     // Assert
-    expectedCar.Brand.Should().Be(updatedCar.Brand);
-    expectedCar.Model.Should().Be(updatedCar.Model);
+    Assert.Equal(updatedCar.Brand, expectedCar.Brand);
+    Assert.Equal(updatedCar.Model, expectedCar.Model);
     dbContextMock.SaveChangesCalls.Should().Be(1);
 }
 ```
