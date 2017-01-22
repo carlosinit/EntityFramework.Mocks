@@ -1,9 +1,9 @@
 # EntityFramework Mocks
 
 ## Introduction
-This project was built in order to help developers to unit test code that depends on Entity Framework without the need for any database being it in-memory or "real".
+This project was built in order to help developers to unit test code that depends on Entity Framework, without the need for any database, be it in-memory or "real".
 
-> **Personal story**: Since there was already 3 occasions I implemented this bunch of classes in different projects in order to test my data access, I decided to create a nuget that I could reuse in all of those and in the next to come.
+> **Personal story**: Since there was already 3 occasions that I implemented this bunch of classes in different projects in order to test my data access, I decided to create a nuget that I could reuse in all of those projects and in the next to come.
 
 ## Nuget package
 https://www.nuget.org/packages/CarlosInIt.EntityFramework.Mocks
@@ -27,7 +27,7 @@ What is not supported at the moment:
 * Simulate database exceptions
 
 ## Quick start
-You can create a DbContext mock by instantiation the Generic DbContextMock class while passing your real DbContext Type as the generic parameter
+You can create a DbContext mock by instantiating the Generic DbContextMock class while passing your real DbContext Type as the generic parameter
 ``` cs
 var dbContextMock = new DbContextMock<FleetContext>();
 ```
@@ -35,11 +35,11 @@ Then you will need to tell which DbSet you will use
 ``` cs
 dbContextMock.WithDbSet(c => c.Cars);
 ```
-If you need the DbSet to be preloaded with data you can use this overload instead
+If you need the DbSet to be preloaded with data, you can use this overload instead
 ``` cs
 dbContextMock.WithDbSet(c => c.Cars, new[] { ... });
 ```
-If you need the DbSet to be able to perform a Find or FindAsync you need to specify how the id is resolved
+If you need the DbSet to be able to perform a Find or FindAsync, you need to specify how the id is resolved
 ``` cs
 dbContextMock.WithDbSet(c => c.Cars, new[] { ... }, (entity, keys)=>entity.Id == (int)keys[0]);
 ```
@@ -60,7 +60,7 @@ dbContextMock.WithCallToSaveChanges(numberYouWantToBeReturned);
 // or in case of async
 dbContextMock.WithCallToSaveChangesAsync(numberYouWantToBeReturned);
 ```
-Here goes a full example of an update example
+Here goes a full example of an update
 ``` cs
 public void SaveCarTest()
 {
@@ -91,7 +91,7 @@ public void SaveCarTest()
 
 
 ## More examples
-An complete example of a service (depending on DbContext) being tested can be found in this repository here:
+A complete example of a service (depending on DbContext) being tested can be found in this repository:
 https://github.com/carlosinit/EntityFramework.Mocks/tree/master/CarlosInIt.EntityFramework.Mocks.Examples
 
 *Note:* This examples use FluentAssertions and XUnit
