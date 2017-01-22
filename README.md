@@ -45,7 +45,7 @@ dbContextMock.WithDbSet(c => c.Cars, new[] { ... }, (entity, keys)=>entity.Id ==
 ```
 Now you can use the configured DbContext mock
 ``` cs
-var carService = new CarService(dbContextMock.Object);
+var sut = new CarService(dbContextMock.Object);
 // Use the service now...
 ```
 If you need to check if SaveChanges or SaveChangesAsync was called (which you do if you are saving data to the database)
@@ -79,6 +79,7 @@ public void SaveCarTest()
     dbContextMock.WithCallToSaveChanges(1);
 
     // Act
+    var sut = new CarService(dbContextMock.Object);
     sut.SaveCar(expectedCar.Id, updatedCar);
 
     // Assert
