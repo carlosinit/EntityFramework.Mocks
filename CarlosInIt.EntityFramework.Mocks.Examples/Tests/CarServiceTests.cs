@@ -145,6 +145,7 @@ namespace CarlosInIt.EntityFramework.Mocks.Examples.Tests
             // Assert
             expectedCar.Brand.Should().Be(updatedCar.Brand);
             expectedCar.Model.Should().Be(updatedCar.Model);
+            dbContextMock.SaveChangesCalls.Should().Be(1);
         }
 
         [Fact]
