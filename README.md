@@ -89,7 +89,7 @@ public void SaveCarTest()
 ```
 
 
-## Examples
+## More examples
 An example of service depending on DbContext being tested can be found in this repository here:
 https://github.com/carlosinit/EntityFramework.Mocks/tree/master/CarlosInIt.EntityFramework.Mocks.Examples
 
