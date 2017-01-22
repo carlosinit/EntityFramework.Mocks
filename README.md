@@ -90,8 +90,10 @@ public void SaveCarTest()
 
 
 ## More examples
-An example of service depending on DbContext being tested can be found in this repository here:
+An complete example of a service (depending on DbContext) being tested can be found in this repository here:
 https://github.com/carlosinit/EntityFramework.Mocks/tree/master/CarlosInIt.EntityFramework.Mocks.Examples
+
+*Note:* This examples use FluentAssertions and XUnit
 
 ## What's next?
 All the unsupported features described above
