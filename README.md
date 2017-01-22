@@ -1,5 +1,5 @@
 # EntityFramework Mocks
----
+
 ## Introduction
 This project was built in order to help developers to unit test code that depends on Entity Framework without the need for any database being it in-memory or "real".
 
